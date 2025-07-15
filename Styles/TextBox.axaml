@@ -1,0 +1,78 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <Style Selector="TextBox">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <DataValidationErrors>
+                    <ListBoxItem>
+                        <Panel>
+                            <Border
+                                Name="{TemplateBinding Name}"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                MinWidth="{TemplateBinding MinWidth}"
+                                MinHeight="{TemplateBinding MinHeight}">
+                            </Border>
+
+                            <Border
+                                Margin="{TemplateBinding BorderThickness}">
+                                <Grid ColumnDefinitions="Auto,*,Auto" >
+                                    <ContentPresenter Grid.Column="0"
+                                                      Content="{TemplateBinding InnerLeftContent}"/>
+                                    
+                                    <DockPanel x:Name="PART_InnerDockPanel"
+                                               Grid.Column="1"
+                                               Cursor="IBeam"
+                                               Margin="{TemplateBinding Padding}">
+                                        
+                                        <TextBlock Name="PART_FloatingWatermark"
+                                                   Foreground="{DynamicResource SystemAccentColor}"
+                                                   FontSize="{TemplateBinding FontSize}"
+                                                   IsVisible="False"
+                                                   Text="{TemplateBinding Watermark}"
+                                                   DockPanel.Dock="Top" />
+                                        
+                                        <Panel>
+                                                                                 
+                                            <TextBlock Name="PART_Watermark"
+                                                       Opacity="0.5"
+                                                       Text="{TemplateBinding Watermark}"
+                                                       TextAlignment="{TemplateBinding TextAlignment}"
+                                                       TextWrapping="{TemplateBinding TextWrapping}"
+                                                       IsVisible="{TemplateBinding Text, Converter={x:Static StringConverters.IsNullOrEmpty}}"
+                                                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                            </TextBlock>
+                                            
+                                            <TextPresenter Name="PART_TextPresenter"
+                                                           Text="{TemplateBinding Text, Mode=TwoWay}"
+                                                           CaretIndex="{TemplateBinding CaretIndex}"
+                                                           SelectionStart="{TemplateBinding SelectionStart}"
+                                                           SelectionEnd="{TemplateBinding SelectionEnd}"
+                                                           TextAlignment="{TemplateBinding TextAlignment}"
+                                                           TextWrapping="{TemplateBinding TextWrapping}"
+                                                           LineHeight="{TemplateBinding LineHeight}"
+                                                           LetterSpacing="{TemplateBinding LetterSpacing}"
+                                                           PasswordChar="{TemplateBinding PasswordChar}"
+                                                           RevealPassword="{TemplateBinding RevealPassword}"
+                                                           SelectionBrush="{TemplateBinding SelectionBrush}"
+                                                           SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                                           CaretBrush="{TemplateBinding CaretBrush}"
+                                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                            
+                                        </Panel>                                    
+                                    </DockPanel>
+                                    <ContentPresenter Grid.Column="2" Content="{TemplateBinding InnerRightContent}"/>
+                                </Grid>
+                            </Border>
+                        </Panel>
+                    </ListBoxItem>
+                </DataValidationErrors>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>

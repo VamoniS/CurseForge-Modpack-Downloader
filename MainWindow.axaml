@@ -1,0 +1,94 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="using:Modloader.User_Controls"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" Width="640" Height="360"
+        x:Class="Modloader.MainWindow"
+        Title="Mod loader">
+    <Grid Background="{StaticResource MainColor}">
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="0" Margin="10,10,0,0">
+            
+            <Grid.Styles>
+                <StyleInclude Source="../Styles/TextBox.axaml"/>
+                <StyleInclude Source="../Styles/ListBox.axaml"/>
+            </Grid.Styles>
+            
+            <TextBox CornerRadius="{StaticResource CornerRadius}"
+                     Width="220"
+                     HorizontalAlignment="Left"
+                     Background="{StaticResource SecondaryColor}"
+                     Foreground="{StaticResource FontColor}"
+                     BorderBrush="Transparent"
+                     BorderThickness="0"
+                     Watermark="Search"
+                     TextChanged="SearchBox_TextChanged"
+            />
+        </Grid>
+        <Grid Grid.Row="1" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="0.4*"/>
+            </Grid.ColumnDefinitions>
+            
+            <Grid.Styles>
+                <StyleInclude Source="../Styles/ListBoxItemOutline.axaml"/>
+            </Grid.Styles>
+            
+            
+            <Border Grid.Column="0" Background="{StaticResource SecondaryColor}"
+                    CornerRadius="{StaticResource CornerRadius}">
+                <ListBox Name="SearchPanel"
+                         Background="Transparent"
+                         VerticalAlignment="Top"
+                         Initialized="SearchPanel_OnInitialized"
+                         SelectionChanged="ModpackSelectionChanged"/>
+            </Border>
+            <Grid Grid.Column="1" Margin="5">
+                <Grid.Styles>
+                    <StyleInclude Source="../Styles/Button.axaml"></StyleInclude>
+                    <StyleInclude Source="../Styles/ComboBox.axaml"></StyleInclude>
+                    
+                    <Style Selector="TextBlock.ComboBox">
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                        <Setter Property="FontSize" Value="15"/>
+                        <Setter Property="Foreground" Value="{StaticResource FontColor}"/>
+                    </Style>
+                    
+                </Grid.Styles>
+                
+                <StackPanel VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                    <ComboBox Name="FileVersionsComboBox" HorizontalAlignment="Stretch" 
+                              Background="{StaticResource SecondaryColor}"
+                              HorizontalContentAlignment="Center"
+                              BorderBrush="Transparent"
+                              BorderThickness="0"
+                              CornerRadius="{StaticResource CornerRadius}"
+                              PlaceholderText="Modpack Files"/>
+                </StackPanel>
+                <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
+                    <TextBlock Name="StatusTextBlock" Foreground="Gray"/>
+                    <ProgressBar Height="5" Margin="0,0,0,5" Background="{StaticResource SecondaryColor}"
+                                 Foreground="{StaticResource Brush}"
+                                 MinWidth="0" Minimum="0" Maximum="100" Name="ProgressBar"/>
+                    <Button Name="DownloadButton"
+                            HorizontalAlignment="Stretch" 
+                            VerticalAlignment="Bottom"
+                            HorizontalContentAlignment="Center"
+                            Content="Download"
+                            Foreground="{StaticResource FontColor}"
+                            Background="{StaticResource SecondaryColor}"
+                            FontSize="17"
+                            CornerRadius="{StaticResource CornerRadius}"
+                            Click="DownloadButton_OnClick"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
