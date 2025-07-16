@@ -1,23 +1,41 @@
-# License
+# CurseForgeModpackLoader
 
-MIT License
+A simple and user-friendly application for downloading Minecraft modpacks directly from CurseForge.  
+Built with C# and Avalonia, this program features a clean graphical interface for searching, selecting, and downloading modpacks with ease.
 
-Copyright (c) 2025 VamoniS
+---
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+## Features
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+- **Search** for Minecraft modpacks from CurseForge.
+- **Browse** popular modpacks and view download stats.
+- **Select** the desired modpack version.
+- **Download** modpacks directly from the app.
+- **Modern, cross-platform UI** built with Avalonia.
+- **Self-contained** — no additional dependencies required.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+---
+
+## Getting Started
+
+### Download
+
+1. Go to the [Releases](../../releases) page.
+2. Download the latest `.exe` file for your platform.
+3. No installation required — simply run the executable.
+
+### Usage
+
+1. **Launch the application** by double-clicking the downloaded `.exe` file.
+2. Use the **Search** box (top-left) to find specific modpacks.
+3. Browse results in the left panel.
+4. On the right, choose the modpack version from the dropdown.
+5. Click **Download** to fetch the selected modpack.
+
+---
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
