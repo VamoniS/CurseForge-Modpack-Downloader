@@ -1,4 +1,4 @@
-# CurseForgeModpackLoader
+# CurseForge Modpack Downloader
 
 A simple and user-friendly application for downloading Minecraft modpacks directly from CurseForge.  
 Built with C# and Avalonia, this program features a clean graphical interface for searching, selecting, and downloading modpacks with ease.
