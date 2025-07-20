@@ -1,19 +1,17 @@
-
-
 using System.Text.Json.Serialization;
 
 namespace Modloader.DataStructures;
 
-
-public class ManifestStructure
+public struct ManifestStructure
 {
     [JsonPropertyName("files")]
-    public ModFile[]? Files { get; set; }
+    public ModFile[] Files { get; set; }
 }
-public class ModFile
+public struct ModFile
 {
     [JsonPropertyName("projectID")]
-    public int? ProjectID { get; set; }
+    public int Projectid { get; set; }
+    
     [JsonPropertyName("fileID")]
-    public int? FileID { get; set; }
+    public int Fileid { get; set; }
 }

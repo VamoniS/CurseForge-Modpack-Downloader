@@ -1,22 +1,21 @@
-
-
 using System.Text.Json.Serialization;
 
 namespace Modloader.DataStructures;
 
-
-class SearchResponse
+public struct SearchResponse
 {
     [JsonPropertyName("data")]
-    public SearchData[]? Data { get; set; }
+    public SearchData[] Data { get; set; }
 }
 
-class SearchData
+public struct SearchData
 {
     [JsonPropertyName("name")]
-    public string? Name { get; set; }
+    public string Name { get; set; }
+    
     [JsonPropertyName("downloadCount")]
-    public int? DownloadCount { get; set; }
+    public int DownloadCount { get; set; }
+    
     [JsonPropertyName("id")]
-    public int? Id { get; set; }
+    public int Id { get; set; }
 }

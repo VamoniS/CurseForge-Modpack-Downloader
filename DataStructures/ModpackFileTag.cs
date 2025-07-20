@@ -1,12 +1,14 @@
+using System.Text.Json.Serialization;
+
 namespace Modloader.DataStructures;
 
-public class ModpackFileTag
+public struct ModpackFileTag
 {
     public int ModId { get; set; }
     
     public int FileId { get; set; }
     
-    public string? Filename { get; set; }
+    public string Filename { get; set; }
     
-    public string? DisplayName { get; set; }
+    public string DisplayName { get; set; }
 }

@@ -34,48 +34,52 @@ public partial class MainWindow : Window
     }
 
     private static readonly int PageSize = 10;
+    private static readonly HttpClient Client = new();
     private static readonly string ApiKey = "$2a$10$KvgZMrQ2Ms21V10Z2jbV2.N.9WvK3zd1gFJ4ejIxFB2.6ke6yW6NS";
     
-    private static async Task<SearchResponse?> SearchModpack(string? query)
+    private static async Task<SearchResponse> SearchModpack(string? query)
     {
-        var client = new HttpClient();
         HttpRequestMessage request;
         if (query is null || query == String.Empty)
         {
             request = new HttpRequestMessage(HttpMethod.Get, 
-                $"https://api.curseforge.com/v1/mods/search?gameId=432&sortField=2&sortOrder=desc&pageSize={PageSize}&classId=4471");
+                $"https://api.curseforge.com/v1/mods/search" +
+                $"?gameId=432&sortField=2&sortOrder=desc&pageSize={PageSize}&classId=4471");
         }
         else
         {
             request = new HttpRequestMessage(HttpMethod.Get, 
-                $"https://api.curseforge.com/v1/mods/search?gameId=432&sortField=2&sortOrder=desc&pageSize={PageSize}&searchFilter={query}&classId=4471");
+                $"https://api.curseforge.com/v1/mods/search" +
+                $"?gameId=432&sortField=2&sortOrder=desc&pageSize={PageSize}&searchFilter={query}&classId=4471");
         }
         
         request.Headers.Add("Accept", "application/json");
         request.Headers.Add("x-api-key", ApiKey);
         
-        var response = await client.SendAsync(request);
+        var response = await Client.SendAsync(request);
         
         response.EnsureSuccessStatusCode();
 
-        var content = JsonSerializer.Deserialize<SearchResponse>(await response.Content.ReadAsStringAsync());
+        var content = JsonSerializer.Deserialize(await response.Content.ReadAsStringAsync(),
+            DataStructuresContext.Default.SearchResponse);
 
         return content;
     }
     
-    private static async Task<GetFilesResponse?> GetFiles(int modId)
+    private static async Task<GetFilesResponse> GetFiles(int modId)
     {
-        var client = new HttpClient();
-        var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.curseforge.com/v1/mods/{modId}/files");
+        var request = new HttpRequestMessage(HttpMethod.Get, 
+            $"https://api.curseforge.com/v1/mods/{modId}/files");
         
         request.Headers.Add("Accept", "application/json");
         request.Headers.Add("x-api-key", ApiKey);
         
-        var response = await client.SendAsync(request);
+        var response = await Client.SendAsync(request);
         
         response.EnsureSuccessStatusCode();
         
-        var content = JsonSerializer.Deserialize<GetFilesResponse>(await response.Content.ReadAsStringAsync());
+        var content = JsonSerializer.Deserialize(await response.Content.ReadAsStringAsync(),
+            DataStructuresContext.Default.GetFilesResponse);
 
         return content;
         
@@ -83,43 +87,52 @@ public partial class MainWindow : Window
     
     private static async Task DownloadFile(int? id, string? filename, string path)
     {
-        var client = new HttpClient();
         string? sId = Convert.ToString(id);
         
         if (sId is null)
             return;
         
-        string url = $"https://mediafilez.forgecdn.net/files/{sId.Substring(0, 4).TrimStart('0')}/{sId.Substring(sId.Length - 3).TrimStart('0')}/{filename}"
+        string url = $"https://mediafilez.forgecdn.net/files/" +
+                     $"{sId.Substring(0, 4).TrimStart('0')}/" +
+                     $"{sId.Substring(sId.Length - 3).TrimStart('0')}/{filename}"
             .Replace("+", "%2B")
             .Replace(" ", "%20");
             
-        var content = await client.GetStreamAsync(url);
+        var content = await Client.GetStreamAsync(url);
 
-        var file = File.Create(Path.Combine(path, filename ?? "Error"));
-        
-        byte[] buffer = new byte[4096];
-        int bytesRead;
-        
-        while ((bytesRead = await content.ReadAsync(buffer, 0, buffer.Length)) > 0)
+        try
         {
-            file.Write(buffer, 0, bytesRead);
+            var file = File.Create(Path.Combine(path, filename ?? "Error"));
+        
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+        
+            while ((bytesRead = await content.ReadAsync(buffer, 0, buffer.Length)) > 0)
+            {
+                file.Write(buffer, 0, bytesRead);
+            }
+            await file.DisposeAsync();
         }
-        await file.DisposeAsync();
+        catch 
+        {
+                //ignored
+        }
     }
     
-    private static async Task<GetFileResponse?> GetFile(int? modId, int? fileId)
+    private static async Task<GetFileResponse> GetFile(int? modId, int? fileId)
     {
-        var client = new HttpClient();
-        var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.curseforge.com/v1/mods/{modId}/files/{fileId}");
+        var request = new HttpRequestMessage(HttpMethod.Get,
+            $"https://api.curseforge.com/v1/mods/{modId}/files/{fileId}");
         
         request.Headers.Add("Accept", "application/json");
         request.Headers.Add("x-api-key", ApiKey);
         
-        var response = await client.SendAsync(request);
+        var response = await Client.SendAsync(request);
         
         response.EnsureSuccessStatusCode();
         
-        var content = JsonSerializer.Deserialize<GetFileResponse>(await response.Content.ReadAsStringAsync());
+        var content = JsonSerializer.Deserialize(await response.Content.ReadAsStringAsync(),
+            DataStructuresContext.Default.GetFileResponse);
 
         return content;
     }
@@ -139,12 +152,12 @@ public partial class MainWindow : Window
     
     private static string GetDirectoryToDownload(GetFileResponse? fileInfo)
     {
-        if (fileInfo?.Data?.FileName is null || fileInfo.Data?.Modules is null)
+        if (fileInfo?.Data.FileName is null)
             return String.Empty;
         
-        if (fileInfo.Data.FileName.EndsWith(".zip"))
+        if (fileInfo.Value.Data.FileName.EndsWith(".zip"))
         {
-            if (fileInfo.Data.Modules.Any(x => x.Name == "shaders"))
+            if (fileInfo.Value.Data.Modules.Any(x => x.Name == "shaders"))
             {
                 return "shaderpacks";
             }
@@ -158,18 +171,19 @@ public partial class MainWindow : Window
     private async Task CheckFiles(string path, List<int> downloadedFiles)
     {
         
-        var content = File.ReadAllText(path);
+        var content = await File.ReadAllTextAsync(path);
 
-        var json = JsonSerializer.Deserialize<ManifestStructure>(content);
+        var json = JsonSerializer.Deserialize(content,
+            DataStructuresContext.Default.ManifestStructure);
         
-        if(json is null || json.Files is null || downloadedFiles.Count == json.Files.Length)
+        if(downloadedFiles.Count == json.Files.Length)
             return;
         
         int downloadedCount = 0;
         
         foreach (var file in json.Files)
         {
-            if (downloadedFiles.Contains((int)file.FileID!))
+            if (downloadedFiles.Contains(file.Fileid))
             {
                 downloadedCount++;
             
@@ -177,9 +191,10 @@ public partial class MainWindow : Window
                 continue;
             }
 
-            var fileInfo = GetFile(file.ProjectID, file.FileID).GetAwaiter().GetResult();
+            var fileInfo = GetFile(file.Projectid, file.Fileid).GetAwaiter().GetResult();
 
-            await DownloadFile(file.FileID, fileInfo?.Data?.FileName, $"{Path.GetDirectoryName(path)}/overrides/{GetDirectoryToDownload(fileInfo)}");
+            await DownloadFile(file.Fileid, fileInfo.Data.FileName, 
+                $"{Path.GetDirectoryName(path)}/overrides/{GetDirectoryToDownload(fileInfo)}");
 
             downloadedCount++;
             
@@ -191,10 +206,8 @@ public partial class MainWindow : Window
     {
         var content = File.ReadAllText(path);
 
-        var json = JsonSerializer.Deserialize<ManifestStructure>(content);
-        
-        if(json is null || json.Files is null)
-            return new List<int>();
+        var json = JsonSerializer.Deserialize(content,
+            DataStructuresContext.Default.ManifestStructure);
 
         List<int> downloadedFiles = new List<int>();
         
@@ -202,12 +215,13 @@ public partial class MainWindow : Window
         {
             try
             {
-                var fileInfo = GetFile(file.ProjectID, file.FileID).GetAwaiter().GetResult();
+                var fileInfo = GetFile(file.Projectid, file.Fileid).GetAwaiter().GetResult();
 
-                DownloadFile(file.FileID, fileInfo?.Data?.FileName, $"{Path.GetDirectoryName(path)}/overrides/{GetDirectoryToDownload(fileInfo)}")
+                DownloadFile(file.Fileid, fileInfo.Data.FileName, 
+                        $"{Path.GetDirectoryName(path)}/overrides/{GetDirectoryToDownload(fileInfo)}")
                     .GetAwaiter();
 
-                downloadedFiles.Add((int)file.FileID!);
+                downloadedFiles.Add(file.Fileid);
 
                 Progress = downloadedFiles.Count * 100 / json.Files.Length;
             }
@@ -235,9 +249,6 @@ public partial class MainWindow : Window
         var searchResponse = await SearchModpack(null);
         
         SearchPanel.Items.Clear();
-        
-        if(searchResponse is null || searchResponse.Data is null)
-            return;
 
         foreach (var modpack in searchResponse.Data)
         {
@@ -257,9 +268,6 @@ public partial class MainWindow : Window
         var searchResponse = await SearchModpack(query);
         
         SearchPanel.Items.Clear();
-        
-        if(searchResponse is null || searchResponse.Data is null)
-            return;
 
         foreach (var modpack in searchResponse.Data)
         {
@@ -277,21 +285,16 @@ public partial class MainWindow : Window
     {
         FileVersionsComboBox.Items.Clear();
 
-        if (response.Data is null)
-            return;
-
         foreach (var file in response.Data)
         {
-            if (file.Id is null || file.ModId is null)
-                continue;
             var textBlock = new TextBlock()
             {
                 Classes = { "ComboBox" },
                 Text = file.DisplayName,
                 Tag = new ModpackFileTag
                 {
-                    FileId = (int)file.Id,
-                    ModId = (int)file.ModId,
+                    FileId = file.Id,
+                    ModId = file.ModId,
                     Filename = file.FileName,
                     DisplayName = file.DisplayName
                 }
@@ -311,9 +314,6 @@ public partial class MainWindow : Window
             return;
 
         var files = await GetFiles((int)selectedItem.ModpackId);
-        
-        if(files is null)
-            return;
         
         AddVersionsToModpackFileVersionsComboBox(files);
     }
@@ -338,10 +338,7 @@ public partial class MainWindow : Window
     {
         var textBlock = FileVersionsComboBox.SelectedItem as TextBlock;
 
-        var fileInfo = textBlock?.Tag as ModpackFileTag;
-
-        if (fileInfo is null)
-            return;
+        var fileInfo = (ModpackFileTag)textBlock?.Tag!;
         
         DownloadButton.IsEnabled = false;
         Progress = 0;

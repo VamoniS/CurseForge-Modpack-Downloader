@@ -2,23 +2,23 @@ using System.Text.Json.Serialization;
 
 namespace Modloader.DataStructures;
 
-public class GetFilesResponse
+public struct GetFilesResponse
 {
     [JsonPropertyName("data")]
-    public GetFilesData[]? Data { get; set; }
+    public GetFilesData[] Data { get; set; }
 }
 
-public class GetFilesData
+public struct GetFilesData
 {
     [JsonPropertyName("id")]
-    public int? Id { get; set; }
+    public int Id { get; set; }
     
     [JsonPropertyName("modId")]
-    public int? ModId { get; set; }
+    public int ModId { get; set; }
     
     [JsonPropertyName("displayName")]
-    public string? DisplayName { get; set; }
+    public string DisplayName { get; set; }
     
     [JsonPropertyName("fileName")]
-    public string? FileName { get; set; }
+    public string FileName { get; set; }
 }

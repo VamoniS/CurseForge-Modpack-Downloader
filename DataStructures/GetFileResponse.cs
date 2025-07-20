@@ -1,26 +1,24 @@
-
 using System.Text.Json.Serialization;
 
 namespace Modloader.DataStructures;
 
-
-class GetFileResponse
+public struct GetFileResponse
 {
     [JsonPropertyName("data")]
-    public GetFileData? Data { get; set; }
+    public GetFileData Data { get; set; }
 }
 
-class GetFileData
+public struct GetFileData
 {
     [JsonPropertyName("fileName")]
-    public string? FileName { get; set; }
+    public string FileName { get; set; }
     
     [JsonPropertyName("modules")]
-    public Module[]? Modules { get; set; }
+    public Module[] Modules { get; set; }
 }
 
-public class Module
+public struct Module
 {
     [JsonPropertyName("name")]
-    public string? Name { get; set; }
+    public string Name { get; set; }
 }
