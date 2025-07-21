@@ -18,4 +18,13 @@ public struct SearchData
     
     [JsonPropertyName("id")]
     public int Id { get; set; }
+    
+    [JsonPropertyName("logo")]
+    public LogoData Logo { get; set; }
+}
+
+public struct LogoData
+{
+    [JsonPropertyName("url")]
+    public string Url { get; set; }
 }

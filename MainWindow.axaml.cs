@@ -255,6 +255,7 @@ public partial class MainWindow : Window
             var searchResult = new SearchResult()
             {
                 Title = modpack.Name,
+                LogoUrl =  modpack.Logo.Url,
                 ModpackId = modpack.Id,
                 DownloadsCount = modpack.DownloadCount
             };

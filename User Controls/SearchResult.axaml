@@ -2,32 +2,50 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-
+             xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
              mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="55"
              x:Class="Modloader.User_Controls.SearchResult">
     <Border Background="{StaticResource MainColor}" CornerRadius="10" Height="55">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
+        <Grid >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
             
-            <Grid Grid.Row="0" Margin="15,5,0,0">
-                <TextBlock Text="{Binding Title}"
-                           Foreground="{StaticResource FontColor}"
-                           FontSize="20"/>
-            </Grid>
-            <Grid Grid.Row="1" Margin="15,0,0,0">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Downloads: "
-                               Foreground="Gray"
-                               FontSize="15"/>
-                    <TextBlock Text="{Binding DownloadsCount}"
-                               Foreground="Gray"
-                               FontSize="15"/>
-                </StackPanel>
+            <Grid Column="0" Width="">
+                <Border HorizontalAlignment="Stretch" CornerRadius="{StaticResource CornerRadius}"
+                        Width="45" 
+                        Height="45" ClipToBounds="True"
+                        Margin="10,5,0,5"
+                        Background="{StaticResource SecondaryColor}">
+                    <Image asyncImageLoader:ImageLoader.Source="{Binding LogoUrl}"
+                           Stretch="UniformToFill"/>
+                </Border>
             </Grid>
             
+            <Grid Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                
+                <Grid Grid.Row="0" Margin="15,5,15,0">
+                    <TextBlock Text="{Binding Title}"
+                               Foreground="{StaticResource FontColor}"
+                               FontSize="20"/>
+                </Grid>
+                
+                <Grid Grid.Row="1" Margin="15,0,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Downloads: "
+                                   Foreground="Gray"
+                                   FontSize="15"/>
+                        <TextBlock Text="{Binding DownloadsCount}"
+                                   Foreground="Gray"
+                                   FontSize="15"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
         </Grid>
     </Border>
 </UserControl>
