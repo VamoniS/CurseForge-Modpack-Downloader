@@ -33,7 +33,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private static readonly int PageSize = 10;
+    private static readonly int PageSize = 20;
     private static readonly HttpClient Client = new();
     private static readonly string ApiKey = "$2a$10$KvgZMrQ2Ms21V10Z2jbV2.N.9WvK3zd1gFJ4ejIxFB2.6ke6yW6NS";
     
@@ -244,42 +244,38 @@ public partial class MainWindow : Window
         ZipFile.ExtractToDirectory(path, directoryName);
     }
     
-    private async void SearchPanel_OnInitialized(object? sender, EventArgs e)
+    private void UpdateSearchPanel(SearchData[] modpacks)
     {
-        var searchResponse = await SearchModpack(null);
+        if (SearchPanel.Items.Count != 0)
+            SearchPanel.Items.Clear();
         
-        SearchPanel.Items.Clear();
-
-        foreach (var modpack in searchResponse.Data)
+        foreach (var modpack in modpacks)
         {
             var searchResult = new SearchResult()
             {
                 Title = modpack.Name,
-                LogoUrl =  modpack.Logo.Url,
                 ModpackId = modpack.Id,
+                LogoUrl =  modpack.Logo.Url,
                 DownloadsCount = modpack.DownloadCount
             };
             SearchPanel.Items.Add(searchResult);
         }
     }
+    
+    private async void SearchPanel_OnInitialized(object? sender, EventArgs e)
+    {
+        var searchResponse = await SearchModpack(null);
+
+        UpdateSearchPanel(searchResponse.Data);
+    }
+    
     private async void SearchBox_TextChanged(object? sender, TextChangedEventArgs e)
     {
         string? query = (sender as TextBox)?.Text;
         
         var searchResponse = await SearchModpack(query);
         
-        SearchPanel.Items.Clear();
-
-        foreach (var modpack in searchResponse.Data)
-        {
-            var searchResult = new SearchResult()
-            {
-                Title = modpack.Name,
-                ModpackId = modpack.Id,
-                DownloadsCount = modpack.DownloadCount
-            };
-            SearchPanel.Items.Add(searchResult);
-        }
+        UpdateSearchPanel(searchResponse.Data);
     }
 
     private void AddVersionsToModpackFileVersionsComboBox(GetFilesResponse response)
@@ -288,7 +284,7 @@ public partial class MainWindow : Window
 
         foreach (var file in response.Data)
         {
-            var textBlock = new TextBlock()
+            var textBlock = new TextBlock
             {
                 Classes = { "ComboBox" },
                 Text = file.DisplayName,

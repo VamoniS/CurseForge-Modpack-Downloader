@@ -50,7 +50,7 @@
                          Initialized="SearchPanel_OnInitialized"
                          SelectionChanged="ModpackSelectionChanged"/>
             </Border>
-            <Grid Grid.Column="1" Margin="5">
+            <Grid Grid.Column="1" Margin="5,0,0,0">
                 <Grid.Styles>
                     <StyleInclude Source="../Styles/Button.axaml"></StyleInclude>
                     <StyleInclude Source="../Styles/ComboBox.axaml"></StyleInclude>
@@ -63,7 +63,7 @@
                     
                 </Grid.Styles>
                 
-                <StackPanel VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                <StackPanel VerticalAlignment="Top" HorizontalAlignment="Stretch" >
                     <ComboBox Name="FileVersionsComboBox" HorizontalAlignment="Stretch" 
                               Background="{StaticResource SecondaryColor}"
                               HorizontalContentAlignment="Center"
