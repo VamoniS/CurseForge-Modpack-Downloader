@@ -35,6 +35,7 @@ public partial class MainWindow : Window
 
     private static readonly int PageSize = 20;
     private static readonly HttpClient Client = new();
+    private static readonly FileSystemWatcher Watcher = new ();
     private static readonly string ApiKey = "$2a$10$KvgZMrQ2Ms21V10Z2jbV2.N.9WvK3zd1gFJ4ejIxFB2.6ke6yW6NS";
     
     private static async Task<SearchResponse> SearchModpack(string? query)
@@ -102,8 +103,8 @@ public partial class MainWindow : Window
 
         try
         {
-            var file = File.Create(Path.Combine(path, filename ?? "Error"));
-        
+            await using var file = File.Create(Path.Combine(path, filename ?? "Error"));
+            
             byte[] buffer = new byte[4096];
             int bytesRead;
         
@@ -111,7 +112,6 @@ public partial class MainWindow : Window
             {
                 file.Write(buffer, 0, bytesRead);
             }
-            await file.DisposeAsync();
         }
         catch 
         {
@@ -262,11 +262,52 @@ public partial class MainWindow : Window
         }
     }
     
-    private async void SearchPanel_OnInitialized(object? sender, EventArgs e)
+    private async void SearchPanel_OnLoaded(object? sender, RoutedEventArgs e)
     {
         var searchResponse = await SearchModpack(null);
 
         UpdateSearchPanel(searchResponse.Data);
+    }
+
+    private void UpdateFolderList()
+    {
+        if (FoldersList.Items.Count != 0) FoldersList.Items.Clear();
+
+        string path = $"{Environment.CurrentDirectory}/ModloaderData/";
+
+        if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+
+        string[] directories = Directory.GetDirectories(path);
+
+        if (directories.Length == FoldersList.Items.Count) return;
+
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Dispatcher.UIThread.Invoke(() =>
+            {
+                foreach (var dir in directories)
+                {
+                    FoldersList.Items.Add(new Folder { FolderName = Path.GetFileName(dir), FolderPath = dir });
+                }
+            });
+        }
+        else
+        {
+            foreach (var dir in directories)
+            {
+                FoldersList.Items.Add(new Folder { FolderName = Path.GetFileName(dir), FolderPath = dir });
+            }
+        }
+    }
+    
+    private void FoldersList_OnLoaded(object? sender, RoutedEventArgs e)
+    {
+        UpdateFolderList();
+    }
+
+    private void OnFolderCreatedOrDeleted(object s, FileSystemEventArgs e)
+    {
+        UpdateFolderList();
     }
     
     private async void SearchBox_TextChanged(object? sender, TextChangedEventArgs e)
@@ -334,8 +375,11 @@ public partial class MainWindow : Window
     private async void DownloadButton_OnClick(object? sender, RoutedEventArgs e)
     {
         var textBlock = FileVersionsComboBox.SelectedItem as TextBlock;
+        
+        if (textBlock is null || textBlock.Tag is null)
+            return;
 
-        var fileInfo = (ModpackFileTag)textBlock?.Tag!;
+        var fileInfo = (ModpackFileTag)textBlock.Tag;
         
         DownloadButton.IsEnabled = false;
         Progress = 0;
@@ -372,6 +416,20 @@ public partial class MainWindow : Window
     
     public MainWindow()
     {
+        string path = $"{Environment.CurrentDirectory}/ModloaderData/";
+
+        if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+        
+        Watcher.Path = path;
+
+        Watcher.NotifyFilter = NotifyFilters.DirectoryName;
+
+        Watcher.Created += OnFolderCreatedOrDeleted;
+        Watcher.Deleted += OnFolderCreatedOrDeleted;
+        
+        Watcher.EnableRaisingEvents = true;
+        
         InitializeComponent();
     }
+    
 }

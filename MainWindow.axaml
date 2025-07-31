@@ -2,7 +2,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:asyncImageLoader1="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" Width="640" Height="360"
         x:Class="Modloader.MainWindow"
         Title="Mod loader">
@@ -47,12 +46,12 @@
                 <ListBox Name="SearchPanel"
                          Background="Transparent"
                          VerticalAlignment="Top"
-                         Initialized="SearchPanel_OnInitialized"
+                         Loaded="SearchPanel_OnLoaded"
                          SelectionChanged="ModpackSelectionChanged"/>
             </Border>
             <Grid Grid.Column="1" Margin="5,0,0,0">
                 <Grid.Styles>
-                    <StyleInclude Source="../Styles/Button.axaml"></StyleInclude>
+                    <StyleInclude Source="../Styles/ButtonOutline.axaml"></StyleInclude>
                     <StyleInclude Source="../Styles/ComboBox.axaml"></StyleInclude>
                     
                     <Style Selector="TextBlock.ComboBox">
@@ -63,31 +62,62 @@
                     
                 </Grid.Styles>
                 
-                <StackPanel VerticalAlignment="Top" HorizontalAlignment="Stretch" >
-                    <ComboBox Name="FileVersionsComboBox" HorizontalAlignment="Stretch" 
-                              Background="{StaticResource SecondaryColor}"
-                              HorizontalContentAlignment="Center"
-                              BorderBrush="Transparent"
-                              BorderThickness="0"
-                              CornerRadius="{StaticResource CornerRadius}"
-                              PlaceholderText="Modpack Files"/>
-                </StackPanel>
-                <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
-                    <TextBlock Name="StatusTextBlock" Foreground="Gray"/>
-                    <ProgressBar Height="5" Margin="0,0,0,5" Background="{StaticResource SecondaryColor}"
-                                 Foreground="{StaticResource Brush}"
-                                 MinWidth="0" Minimum="0" Maximum="100" Name="ProgressBar"/>
-                    <Button Name="DownloadButton"
-                            HorizontalAlignment="Stretch" 
-                            VerticalAlignment="Bottom"
-                            HorizontalContentAlignment="Center"
-                            Content="Download"
-                            Foreground="{StaticResource FontColor}"
-                            Background="{StaticResource SecondaryColor}"
-                            FontSize="17"
-                            CornerRadius="{StaticResource CornerRadius}"
-                            Click="DownloadButton_OnClick"/>
-                </StackPanel>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Grid Grid.Row="0">
+                        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Stretch" >
+                            <ComboBox Name="FileVersionsComboBox" HorizontalAlignment="Stretch" 
+                                      Background="{StaticResource SecondaryColor}"
+                                      HorizontalContentAlignment="Center"
+                                      BorderBrush="Transparent"
+                                      BorderThickness="0"
+                                      CornerRadius="{StaticResource CornerRadius}"
+                                      PlaceholderText="Modpack Files"/>
+                        </StackPanel>
+                    </Grid>
+                    
+                    <Grid Grid.Row="1" Margin="0,10,0,10">
+                        
+                        <Grid.Styles>
+                            <StyleInclude Source="Styles/ListBoxItem.axaml"/>
+                        </Grid.Styles>
+                        
+                        <Border Background="{StaticResource SecondaryColor}"
+                                VerticalAlignment="Stretch"
+                                HorizontalAlignment="Stretch"
+                                CornerRadius="{StaticResource CornerRadius}"
+                                Margin="0,0,0,5">
+                            
+                            <ListBox Background="Transparent" Name="FoldersList"
+                                     Loaded="FoldersList_OnLoaded"/>
+                        
+                        </Border>
+                    </Grid>
+                    
+                    <Grid Grid.Row="2">
+                        <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                            <TextBlock Name="StatusTextBlock" Foreground="Gray"/>
+                            <ProgressBar Height="5" Margin="0,0,0,5" Background="{StaticResource SecondaryColor}"
+                                         Foreground="{StaticResource Brush}"
+                                         MinWidth="0" Minimum="0" Maximum="100" Name="ProgressBar"/>
+                            <Button Name="DownloadButton"
+                                    HorizontalAlignment="Stretch" 
+                                    VerticalAlignment="Bottom"
+                                    HorizontalContentAlignment="Center"
+                                    Content="Download"
+                                    Foreground="{StaticResource FontColor}"
+                                    Background="{StaticResource SecondaryColor}"
+                                    FontSize="17"
+                                    CornerRadius="{StaticResource CornerRadius}"
+                                    Click="DownloadButton_OnClick"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
             </Grid>
         </Grid>
     </Grid>

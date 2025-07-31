@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="50"
+             x:Class="Modloader.User_Controls.Folder">
+    <Border Height="42" HorizontalAlignment="Stretch"
+            CornerRadius="{StaticResource CornerRadius}"
+            Background="{StaticResource MainColor}">
+        <Grid>
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <Grid Grid.Column="0">
+                <TextBlock Text="{Binding FolderName}" FontSize="17" TextAlignment="Center"
+                           VerticalAlignment="Center" Margin="10,0,10,0"
+                           Foreground="{StaticResource FontColor}"
+                           HorizontalAlignment="Left"/>
+            </Grid>
+            <Grid Grid.Column="1">
+                
+                <Grid.Styles>
+                    <StyleInclude Source="../Styles/Button.axaml"/>
+                    
+                    <Style Selector="Button">
+                        <Setter Property="Height" Value="32"/>
+                        <Setter Property="Margin" Value="0,0,10,0"/>
+                        <Setter Property="Width" Value="{Binding RelativeSource={RelativeSource Self}, Path=Height, Mode=OneWay}"/>
+                        <Setter Property="CornerRadius" Value="20"/>
+                        <Setter Property="ClipToBounds" Value="True"/>
+                    </Style>
+                </Grid.Styles>
+                
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,10,0">
+                    <Button Background="{StaticResource SecondaryColor}" Click="OpenFolder">
+                        <Image Source="avares://Modloader/Assets/Icons/folder.png" RenderTransform="scale(1.5)"/>
+                    </Button>
+                    <Button Background="#fe405c" Click="DeleteFolder">
+                        <Image Source="avares://Modloader/Assets/Icons/Trashbin.png" RenderTransform="scale(1.4)" Stretch="UniformToFill"/>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

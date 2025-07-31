@@ -7,8 +7,8 @@
     </Design.PreviewWith>
 
     <Style Selector="Button">
-      <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
-      <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}" />
+        <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
+      <Setter Property="Foreground" Value="{StaticResource FontColor}" />
       <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}" />
       <Setter Property="BorderThickness" Value="{DynamicResource ButtonBorderThemeThickness}" />
       <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
@@ -27,7 +27,7 @@
           <ContentPresenter x:Name="PART_ContentPresenter"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
+                            BorderThickness="{StaticResource Thickness}"
                             CornerRadius="{TemplateBinding CornerRadius}"
                             Content="{TemplateBinding Content}"
                             ContentTemplate="{TemplateBinding ContentTemplate}"
@@ -40,19 +40,15 @@
 
       <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
         <Setter Property="Background" Value="{TemplateBinding Background}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushPointerOver}" />
-        <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundPointerOver}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Brush}" />
+        <Setter Property="Foreground" Value="{StaticResource FontColor}" />
       </Style>
 
       <Style Selector="^:pressed">
-        <Setter Property="RenderTransform" Value="scale(0.8)" />
+        <Setter Property="RenderTransform" Value="scale(0.95)" />
       </Style>
 
-      <Style Selector="^:pressed  /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="{TemplateBinding Background}" />
-        <Setter Property="BorderBrush" Value="{TemplateBinding BorderBrush}" />
-        <Setter Property="Foreground" Value="{TemplateBinding Foreground}" />
-      </Style>
+
 
       <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
         <Setter Property="Background" Value="{DynamicResource ButtonBackgroundDisabled}" />
@@ -67,12 +63,6 @@
           <Setter Property="Foreground" Value="{DynamicResource AccentButtonForeground}" />
         </Style>
 
-        <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-          <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundPointerOver}" />
-          <Setter Property="BorderBrush" Value="{DynamicResource AccentButtonBorderBrushPointerOver}" />
-          <Setter Property="Foreground" Value="{DynamicResource AccentButtonForegroundPointerOver}" />
-        </Style>
-
         <Style Selector="^:pressed  /template/ ContentPresenter#PART_ContentPresenter">
           <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundPressed}" />
           <Setter Property="BorderBrush" Value="{DynamicResource AccentButtonBorderBrushPressed}" />
@@ -85,5 +75,5 @@
           <Setter Property="Foreground" Value="{DynamicResource AccentButtonForegroundDisabled}" />
         </Style>
       </Style>
-      </Style>
+    </Style>
 </Styles>

@@ -25,4 +25,15 @@
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Assets\Icons\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Assets\Icons\Trashbin.png" />
+      <AvaloniaResource Include="Assets\Icons\Trashbin.png" />
+      <None Remove="Assets\Icons\folder.png" />
+      <AvaloniaResource Include="Assets\Icons\folder.png" />
+    </ItemGroup>
 </Project>
